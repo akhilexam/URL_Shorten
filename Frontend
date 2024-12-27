@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    #shortened-url {
+      font-weight: bold;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <h1>URL Shortener</h1>
+  <form id="url-form">
+    <label for="long-url">Enter a long URL:</label><br>
+    <input type="url" id="long-url" required style="width: 100%; padding: 8px; margin-top: 10px;"><br>
+    <button type="submit" style="margin-top: 10px;">Shorten URL</button>
+  </form>
+  <p id="shortened-url"></p>
+
+  <script>
+    const form = document.getElementById('url-form');
+    const longUrlInput = document.getElementById('long-url');
+    const shortenedUrlDisplay = document.getElementById('shortened-url');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const longUrl = longUrlInput.value;
+
+      try {
+        const response = await fetch('http://localhost:5000/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ long_url: longUrl }),
+        });
+        const data = await response.json();
+        shortenedUrlDisplay.textContent = data.short_url || 'Error: Could not shorten the URL';
+      } catch (error) {
+        console.error('Error:', error);
+        shortenedUrlDisplay.textContent = 'Error: Could not connect to the server.';
+      }
+    });
+  </script>
+</body>
+</html>
