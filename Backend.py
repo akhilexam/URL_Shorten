@@ -1,9 +1,14 @@
 from flask import Flask, request, jsonify
 import requests
 
+username = "o_4apqv74qgt"
+password = "Workdone@2070"
+
+auth_res = requests.post("https://api-ssl.bitly.com/oauth/access_token",auth=(username,password))
+
 app = Flask(__name__)
 
-BITLY_ACCESS_TOKEN = 'YOUR_BITLY_ACCESS_TOKEN'
+BITLY_ACCESS_TOKEN = auth_res.content.decode()
 
 @app.route('/shorten', methods=['POST'])
 def shorten_url():
